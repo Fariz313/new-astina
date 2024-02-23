@@ -1,0 +1,32 @@
+body{
+    margin: 0 !important;
+}
+.legend{
+    position: fixed;
+    min-width: 25vw;
+    padding-left: 15px;
+    bottom: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+}
+.rightz{
+    right: 0;
+}
+.leftz{
+    left: 0;
+}
+.top-left{
+    position: fixed;
+    padding: 50px;
+    left: 0;
+    top: 0;
+    height: 200px;
+}
+.top-right{
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 50px;
+    height: 200px;
+    pointer-events: none;
+}
