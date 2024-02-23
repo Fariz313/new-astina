@@ -92,7 +92,7 @@ export default {
       Object.keys(party).forEach((key) => {
         this.barChartData.labels.push(party[key].nama);
         this.barChartData.datasets[0].backgroundColor.push(party[key].warna);
-        this.barChartData.datasets[0].data = JSON.parse(this.dataChart);
+        this.barChartData.datasets[0].data = this.dataChartParsed;
       });
       this.barChartData.datasets[0].backgroundColor.splice(14, 4);
       this.barChartData.labels.splice(14, 4);
@@ -101,6 +101,7 @@ export default {
     },
   },
   mounted() {
+    this.dataChartParsed = JSON.parse(this.dataChart);
     this.getData();
     this.$nextTick(function () {
       const ctx = document.getElementById("myChart").getContext("2d");
@@ -118,6 +119,11 @@ export default {
           plugins: {
             legend: {
               display: false,
+              labels: {
+                font: {
+                  size: 5,
+                },
+              },
             },
             title: {
               display: true,
@@ -133,10 +139,8 @@ export default {
       this.handler = !this.handler;
       this.dataChartParsed = JSON.parse(this.dataChart);
       this.getData();
-      console.log(this.barChartData);
-      var graph = Chart.getChart('myChart')
-      graph.data= this.barChartData
-      console.log(graph);
+      var graph = Chart.getChart("myChart");
+      graph.data = this.barChartData;
       graph.update();
     },
   },
