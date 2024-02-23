@@ -1,12 +1,11 @@
-
 module.exports = {
     apps: [
       {
-        name: 'GONDOR',
+        name: 'NuxtAppName',
+        port: '3090',
         exec_mode: 'cluster',
-        instances: 2, // Or a number of instances
-        script: './node_modules/nuxt/bin/nuxt.js',
-        args: 'start'
+        instances: 'max',
+        script: './.output/server/index.mjs'
       }
     ]
   }
