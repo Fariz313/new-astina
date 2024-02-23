@@ -1,32 +1,42 @@
-body{
+body {
     margin: 0 !important;
 }
-.legend{
+
+.legend {
     position: fixed;
-    min-width: 25vw;
+    width: 25vw;
     padding-left: 15px;
     bottom: 0;
     transform: translateY(-20px);
     pointer-events: none;
+    height: 400px;
 }
-.rightz{
+
+.rightz {
     right: 0;
 }
-.leftz{
+
+.leftz {
     left: 0;
 }
-.top-left{
+
+.top-left {
     position: fixed;
     padding: 50px;
     left: 0;
     top: 0;
     height: 200px;
 }
-.top-right{
+
+.top-right {
     position: fixed;
     top: 0;
     right: 0;
     padding: 50px;
     height: 200px;
     pointer-events: none;
+}
+
+.chartStyle {
+    height: '1500px';
 }

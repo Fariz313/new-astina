@@ -7,8 +7,8 @@
             {{ wilayah }}
           </h5>
         </div>
-        <div>
-          <canvas id="myChart"></canvas>
+        <div class="h-100">
+          <canvas id="myChart" class="h-100"></canvas>
         </div>
       </div>
     </div>
@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       handler: false,
-      myChart:null,
+      myChart: null,
       images: [
         "https://i.stack.imgur.com/2RAv2.png",
         "https://i.stack.imgur.com/Tq5DA.png",
@@ -54,7 +54,7 @@ export default {
         labels: [],
         datasets: [
           {
-            label: "Perloehan Suara",
+            label: "Perolehan suara partai nasional berdasar sirekap",
             backgroundColor: [],
             data: [],
           },
@@ -65,7 +65,7 @@ export default {
         responsive: true,
         title: {
           display: true,
-          text: "Perolehan Suara",
+          text: "Perolehan suara partai nasional berdasar sirekap",
         },
         legend: {
           display: false,
@@ -109,21 +109,19 @@ export default {
         data: this.barChartData,
         options: {
           indexAxis: "y",
-          // Elements options apply to all of the options unless overridden in a dataset
-          // In this case, we are setting the border of each horizontal bar to be 2px wide
           elements: {
             bar: {
-              borderWidth: 2,
+              borderWidth: 0,
             },
           },
           responsive: true,
           plugins: {
             legend: {
-              position: "right",
+              display: false,
             },
             title: {
               display: true,
-              text: "Chart.js Horizontal Bar Chart",
+              text: "Perolehan suara partai nasional berdasar sirekap",
             },
           },
         },
@@ -132,10 +130,14 @@ export default {
   },
   watch: {
     wilayah() {
-      this.getData();
       this.handler = !this.handler;
       this.dataChartParsed = JSON.parse(this.dataChart);
-      this.myChart?.update();
+      this.getData();
+      console.log(this.barChartData);
+      var graph = Chart.getChart('myChart')
+      graph.data= this.barChartData
+      console.log(graph);
+      graph.update();
     },
   },
 };
