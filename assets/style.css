@@ -4,7 +4,8 @@ body {
 
 .legend {
     position: fixed;
-    width: 25vw;
+    min-width: 25vw;
+    max-width: 40vw;
     padding-left: 15px;
     bottom: 0;
     transform: translateY(-20px);

@@ -1,7 +1,8 @@
 <template>
   <div>
+    <Loading v-if="loading" />
     <div
-      style="height: 100vh; background-color: black"
+      style="height: 100vh;"
       id="map-conatiner"
     ></div>
     <SideChart
@@ -9,6 +10,13 @@
       :wilayah="dapil"
       :dataChart="dataChart"
       :left="left"
+    />
+    <img
+      class="top-right"
+      height="100px"
+      src="~/assets/img/logo.png"
+      alt=""
+      srcset=""
     />
   </div>
 </template>
@@ -32,6 +40,7 @@ export default {
       left: true,
       dataChart: "[]",
       dapilRes: null,
+      loading:true
     };
   },
   methods: {
@@ -185,6 +194,7 @@ export default {
           this.hover = false;
         });
       });
+      this.loading=false
     });
   },
 };

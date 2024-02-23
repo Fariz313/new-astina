@@ -109,6 +109,11 @@ export default {
         type: "bar",
         data: this.barChartData,
         options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
           indexAxis: "y",
           elements: {
             bar: {
