@@ -5,7 +5,7 @@
       id="map-conatiner"
     ></div>
     <SideChart
-      v-if="true"
+      v-if="hover"
       :wilayah="dapil"
       :dataChart="dataChart"
       :left="left"
@@ -13,7 +13,6 @@
   </div>
 </template>
 <script>
-import { dapilRes } from "../assets/dapilRes";
 import { party } from "../assets/party";
 import * as turf from "@turf/turf";
 export default {
@@ -32,6 +31,7 @@ export default {
       dapil: "",
       left: true,
       dataChart: "[]",
+      dapilRes: null,
     };
   },
   methods: {
@@ -39,6 +39,7 @@ export default {
       return Math.floor(Math.random() * (max - min)) + min;
     },
     generatePaint() {
+      let dapilRes = this.dapilRes;
       this.paintData = {
         "fill-color": ["match", ["get", "id"]],
         "fill-opacity": 1,
@@ -103,81 +104,86 @@ export default {
           });
         }
       });
-      this.geoJson.features.sort((a, b) => b.properties.id - a.properties.id);
-      let tempData = null;
-      this.geoJson.features.forEach((element) => {
-        if (tempData?.properties.id == element.properties.id) {
-          const tempProperties = element.properties;
-          tempData = turf.union(tempData, element);
-          tempData.properties = {
-            id: tempProperties.id,
-            dapil: tempProperties.dapil,
-          };
-        } else if (tempData) {
-          this.geoJsonTurfted.features.push({
-            type: tempData.type,
-            geometry: tempData.geometry,
-            properties: {
-              id: tempData.properties.id,
-              dapil: tempData.properties.dapil,
-            },
-          });
-          tempData = element;
-        } else {
-          tempData = element;
-        }
-      });
-      this.geoJsonTurfted.features.push({
-        type: tempData.type,
-        geometry: tempData.geometry,
-        properties: {
-          id: tempData.properties.id,
-          dapil: tempData.properties.dapil,
-        },
-      });
-      this.generatePaint();
-      const map = this.$generateMap(this.geoJsonTurfted, this.paintData);
-      map.on("mousemove", "area-boundary", (e) => {
-        const f = map.queryRenderedFeatures(e.point)[0];
-        if (
-          window.event.screenX <
-          window.screen.width / 2 - 0.05 * window.screen.width
-        ) {
-          this.left = false;
-        }
-        if (
-          window.event.screenX >
-          window.screen.width / 2 + 0.05 * window.screen.width
-        ) {
-          this.left = true;
-        }
-        if (this.dapil !== e.features[0].properties.dapil) {
-          this.hover = false;
-        }
-        this.dapil = e.features[0].properties.dapil;
-        const provinfo = dapilRes.table[e.features[0].properties.id]
-        if (provinfo) {
-          this.dataChart = "[]";
-          let dataChartArray = [];
-          if (provinfo) {
-            for (let index = 0; index < 20; index++) {
-              if (provinfo[index + 1]) {
-                dataChartArray.push(provinfo[index + 1]);
-              } else {
-                dataChartArray.push(0);
-              }
-            }
-            this.dataChart = JSON.stringify(dataChartArray)
+      $fetch("https://sirekap-obj-data.kpu.go.id/pemilu/hhcd/pdpr/0.json", {
+        method: "GET",
+      }).then((dapilRes) => {
+        this.dapilRes = dapilRes;
+        this.geoJson.features.sort((a, b) => b.properties.id - a.properties.id);
+        let tempData = null;
+        this.geoJson.features.forEach((element) => {
+          if (tempData?.properties.id == element.properties.id) {
+            const tempProperties = element.properties;
+            tempData = turf.union(tempData, element);
+            tempData.properties = {
+              id: tempProperties.id,
+              dapil: tempProperties.dapil,
+            };
+          } else if (tempData) {
+            this.geoJsonTurfted.features.push({
+              type: tempData.type,
+              geometry: tempData.geometry,
+              properties: {
+                id: tempData.properties.id,
+                dapil: tempData.properties.dapil,
+              },
+            });
+            tempData = element;
+          } else {
+            tempData = element;
           }
-        }
+        });
+        this.geoJsonTurfted.features.push({
+          type: tempData.type,
+          geometry: tempData.geometry,
+          properties: {
+            id: tempData.properties.id,
+            dapil: tempData.properties.dapil,
+          },
+        });
+        this.generatePaint();
+        const map = this.$generateMap(this.geoJsonTurfted, this.paintData);
+        map.on("mousemove", "area-boundary", (e) => {
+          const f = map.queryRenderedFeatures(e.point)[0];
+          if (
+            window.event.screenX <
+            window.screen.width / 2 - 0.05 * window.screen.width
+          ) {
+            this.left = false;
+          }
+          if (
+            window.event.screenX >
+            window.screen.width / 2 + 0.05 * window.screen.width
+          ) {
+            this.left = true;
+          }
+          if (this.dapil !== e.features[0].properties.dapil) {
+            this.hover = false;
+          }
+          this.dapil = e.features[0].properties.dapil;
+          const provinfo = dapilRes.table[e.features[0].properties.id];
+          if (provinfo) {
+            this.dataChart = "[]";
+            let dataChartArray = [];
+            if (provinfo) {
+              for (let index = 0; index < 20; index++) {
+                if (provinfo[index + 1]) {
+                  dataChartArray.push(provinfo[index + 1]);
+                } else {
+                  dataChartArray.push(0);
+                }
+              }
+              this.dataChart = JSON.stringify(dataChartArray);
+            }
+          }
 
-        this.hover = true;
-        this.lastFeature = f.properties.province;
-      });
-      map.on("mouseleave", "area-boundary", (e) => {
-        this.prov = "";
-        this.dataChart = {};
-        this.hover = false;
+          this.hover = true;
+          this.lastFeature = f.properties.province;
+        });
+        map.on("mouseleave", "area-boundary", (e) => {
+          this.prov = "";
+          this.dataChart = {};
+          this.hover = false;
+        });
       });
     });
   },

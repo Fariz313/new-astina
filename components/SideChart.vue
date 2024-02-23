@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       handler: false,
+      myChart:null,
       images: [
         "https://i.stack.imgur.com/2RAv2.png",
         "https://i.stack.imgur.com/Tq5DA.png",
@@ -103,9 +104,29 @@ export default {
     this.getData();
     this.$nextTick(function () {
       const ctx = document.getElementById("myChart").getContext("2d");
-      const myChart = new Chart(ctx, {
+      this.myChart = new Chart(ctx, {
         type: "bar",
-        data: this.dataChartParsed,
+        data: this.barChartData,
+        options: {
+          indexAxis: "y",
+          // Elements options apply to all of the options unless overridden in a dataset
+          // In this case, we are setting the border of each horizontal bar to be 2px wide
+          elements: {
+            bar: {
+              borderWidth: 2,
+            },
+          },
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "right",
+            },
+            title: {
+              display: true,
+              text: "Chart.js Horizontal Bar Chart",
+            },
+          },
+        },
       });
     });
   },
@@ -114,6 +135,7 @@ export default {
       this.getData();
       this.handler = !this.handler;
       this.dataChartParsed = JSON.parse(this.dataChart);
+      this.myChart?.update();
     },
   },
 };
