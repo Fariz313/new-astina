@@ -1,7 +1,7 @@
 <template>
   <div class="legend pb-3" :class="{ rightz: !left, left: left }">
     <div class="container-fluid h-100 px-0">
-      <div class="card h-100 bg-light" style="border-radius: 20px">
+      <div class="card h-100 bg-light pb-5" style="border-radius: 20px">
         <div>
           <h5 class="w-100 text-center">
             {{ wilayah }}
